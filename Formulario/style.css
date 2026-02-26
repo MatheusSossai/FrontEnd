@@ -1,0 +1,15 @@
+p {
+    font-size: 16px;
+    font-family: arial, sans-serif;
+  }
+
+body {
+    align-items: center;
+    text-align: center;
+    background-image: url('https://cdn.prod.website-files.com/66b28e0f6bb6fd9735a480d7/6772ab0c0b29b82dff244e2b_5d3aea8e-c14d-458a-84c1-199422bd78d8.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size:cover;
+    color: rgb(255, 255, 255);
+    text-decoration: underline;
+}
