@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Crédito para Festas & Eventos</title>
+</head>
+<body>
+  <h1>Exercício 06: Crédito para Festas & Eventos</h1>
+  <h2>Infinity Bank - Orçamento de Eventos</h2>
+
+  <p><strong>Pacote:</strong></p>
+  <select id="pacote">
+    <option value="">Selecione o pacote</option>
+    <option value="50">Standard - R$ 50,00 por pessoa</option>
+    <option value="80">Premium - R$ 80,00 por pessoa</option>
+    <option value="120">Infinity Deluxe - R$ 120,00 por pessoa</option>
+  </select>
+
+  <p><strong>Quantidade de Pessoas:</strong></p>
+  <input type="number" id="quantidade" min="1" placeholder="Número de convidados">
+
+  <br><br>
+  <button onclick="calcularOrcamento()">Calcular Orçamento</button>
+
+  <div id="resultado"></div>
+
+  <script src="ex6.js"></script>
+</body>
+</html>

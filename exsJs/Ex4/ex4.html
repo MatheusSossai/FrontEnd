@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Taxas Infinity Bank</title>
+</head>
+<body>
+  <h1>Exercício 04: Taxas Infinity Bank</h1>
+  
+  <p><strong>Bandeira:</strong></p>
+  <select id="bandeira">
+    <option value="">Selecione a bandeira</option>
+    <option value="visa">Visa</option>
+    <option value="master">Master</option>
+    <option value="elo">Elo</option>
+  </select>
+
+  <p><strong>Valor da Venda (R$):</strong></p>
+  <input type="number" id="valor" step="0.01" placeholder="0.00">
+
+  <p><strong>Número de Parcelas:</strong></p>
+  <input type="number" id="parcelas" min="1" placeholder="1">
+
+  <br><br>
+  <button onclick="calcularTaxas()">Calcular</button>
+
+  <div id="resultado"></div>
+
+  <script src="ex4.js"></script>
+</body>
+</html>
