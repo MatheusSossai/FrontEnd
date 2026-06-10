@@ -1,63 +1,228 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Minha Coleção de Facas</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TERMO</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #121213;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 3rem;
+      letter-spacing: 8px;
+      margin-bottom: 20px;
+    }
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 30px auto;
+      max-width: 350px;
+    }
+    .row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+    .tile {
+      width: 62px;
+      height: 62px;
+      border: 2px solid #3a3a3c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: all 0.4s;
+    }
+    .correct { background: #538d4e; border-color: #538d4e; color: white; }
+    .present { background: #b59f3b; border-color: #b59f3b; color: white; }
+    .absent { background: #3a3a3c; border-color: #3a3a3c; color: white; }
+
+    .keyboard {
+      max-width: 500px;
+      margin: 40px auto;
+    }
+    .keyboard-row {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      margin: 6px 0;
+    }
+    .key {
+      padding: 18px 10px;
+      min-width: 40px;
+      font-size: 18px;
+      font-weight: bold;
+      background: #818384;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .key.enter { min-width: 70px; }
+    .key.backspace { min-width: 55px; }
+  </style>
 </head>
-
 <body>
-    <body style="background-color: black; color: white;">
-    <h1>Minha Coleção de Facas no CS2</h1>
+  <h1>TERMO</h1>
+  <div class="grid" id="grid"></div>
+  <div class="keyboard" id="keyboard"></div>
 
-    <p>
-        Minha coleção de facas no jogo é abrangente e valiosa.....
-    </p>
+  <script>
+    const WORDS = ["ABACO","ABRIL","ACIDO","AMIGO","BANHO","BATER","BOLSA","BRACO","CAIXA","CANTO","CASAL","DEDOS","DENTE","FESTA","GATO","LIMAO","MENTE","MIMAR","NOITE","OLHAR","PRAZO","QUASE","REINO","SOLAR","TEMPO","UNIAO","VITOR","TERMO","FORCA","IDEIA","JOGOS","LIVRO","MIMAR"];
 
-    <h2>Facas obtidadas no momento</h2>
+    let solution = WORDS[Math.floor(Math.random() * WORDS.length)];
+    let guesses = [];
+    let currentGuess = "";
+    let gameOver = false;
 
-    <ul>
-        <li>Faca Baioneta Ruby</li>
-        <li>Faca Karambit Case Hardened (Blue Gem)t</li>
-        <li>Faca Skeleton Ultra Violet</li>
-        <li>Faca Butterfly Teia Rubra</li>
-    </ul>
+    function createGrid() {
+      const grid = document.getElementById("grid");
+      grid.innerHTML = "";
+      for (let i = 0; i < 6; i++) {
+        const row = document.createElement("div");
+        row.className = "row";
+        for (let j = 0; j < 5; j++) {
+          const tile = document.createElement("div");
+          tile.className = "tile";
+          row.appendChild(tile);
+        }
+        grid.appendChild(row);
+      }
+    }
 
-    <h2>Imagens das facas</h2>
+    // Lógica EXATA do Termo / Wordle (melhorada)
+    function getTileColors(guess) {
+      const solutionArr = solution.split('');
+      const guessArr = guess.split('');
+      const colors = new Array(5).fill('absent');
 
-    <img src="https://app.skin.land/market_images/98955_s.png" width="200"/>
-    <img src="https://images.steamusercontent.com/ugc/9506346478236677612/4E06E59E3559CC0247F896E79A1633DCE75CF1E9/" width="200"/><br>
-    <img src="https://cdn2.csgo.com/item/image/width=458/%E2%98%85%20Skeleton%20Knife%20%7C%20Ultraviolet%20(Field-Tested).webp" width="200"/>
-    <img src="https://s2-ge.glbimg.com/Gu0hMOksmf5AQ0gGq9gl9_Zmo8s=/0x0:360x360/984x0/smart/filters:strip_icc()/i.s3.glbimg.com/v1/AUTH_bc8228b6673f488aa253bbcb03c80ec5/internal_photos/bs/2020/P/k/ANOqDBTPC8yCBgClkV9w/teiarubra.png" width="200"/>
+      // 1º Passo: Marcar letras verdes (posição correta)
+      for (let i = 0; i < 5; i++) {
+        if (guessArr[i] === solutionArr[i]) {
+          colors[i] = 'correct';
+          solutionArr[i] = null;
+        }
+      }
 
-    <h2>Informações</h2>
+      // 2º Passo: Marcar letras amarelas (letra existe, mas posição errada)
+      for (let i = 0; i < 5; i++) {
+        if (colors[i] === 'correct') continue;
+        
+        const index = solutionArr.indexOf(guessArr[i]);
+        if (index !== -1) {
+          colors[i] = 'present';
+          solutionArr[index] = null;
+        }
+      }
 
-    <table border="1">
-        <tr>
-            <th>Modelo</th>
-            <th>Origem</th>
-            <th>Preço</th>
-        </tr>
-        <tr>
-            <td>Baioneta</td>
-            <td>Estados Unidos</td>
-            <td>R$13,000,00</td>
-        </tr>
-        <tr>
-            <td>Karambit</td>
-            <td>Sudeste Asiático</td>
-            <td>R$1,000,000,00</td>
-        </tr>
-        <tr>
-            <td>Skeleton</td>
-            <td>Alemanha</td>
-            <td>R$3200,00</td>
-        </tr>
-        <tr>
-            <td>Butterfly do fallenzao</td>
-            <td>Brasil</td>
-            <td>Inestimável</td>    
-        </tr>
-    </table>
+      return colors;
+    }
 
+    function updateGrid() {
+      const rows = document.querySelectorAll(".row");
+      
+      rows.forEach((row, rowIndex) => {
+        const tiles = row.children;
+        const guess = guesses[rowIndex] || (rowIndex === guesses.length ? currentGuess : "");
+        
+        for (let i = 0; i < 5; i++) {
+          const letter = guess[i] || "";
+          const tile = tiles[i];
+          tile.textContent = letter;
 
+          tile.classList.remove("correct", "present", "absent");
+
+          if (guesses[rowIndex]) {
+            const colors = getTileColors(guesses[rowIndex]);
+            tile.classList.add(colors[i]);
+          }
+        }
+      });
+    }
+
+    function createKeyboard() {
+      const keyboard = document.getElementById("keyboard");
+      keyboard.innerHTML = "";
+      const rows = [
+        "Q W E R T Y U I O P",
+        "A S D F G H J K L",
+        "ENTER Z X C V B N M ⌫"
+      ];
+
+      rows.forEach(rowText => {
+        const row = document.createElement("div");
+        row.className = "keyboard-row";
+        rowText.split(" ").forEach(key => {
+          const btn = document.createElement("button");
+          btn.className = "key";
+          if (key === "ENTER") btn.classList.add("enter");
+          if (key === "⌫") btn.classList.add("backspace");
+          btn.textContent = key === "⌫" ? "⌫" : key;
+          btn.onclick = () => handleKey(key);
+          row.appendChild(btn);
+        });
+        keyboard.appendChild(row);
+      });
+    }
+
+    function handleKey(key) {
+      if (gameOver) return;
+
+      if (key === "ENTER") {
+        submitGuess();
+      } else if (key === "⌫") {
+        currentGuess = currentGuess.slice(0, -1);
+      } else if (currentGuess.length < 5) {
+        currentGuess += key;
+      }
+      updateGrid();
+    }
+
+    function submitGuess() {
+      if (currentGuess.length !== 5) {
+        alert("A palavra deve ter 5 letras!");
+        return;
+      }
+      if (!WORDS.includes(currentGuess)) {
+        alert("Palavra inválida!");
+        return;
+      }
+
+      guesses.push(currentGuess);
+
+      if (currentGuess === solution) {
+        gameOver = true;
+        setTimeout(() => alert("🎉 Parabéns! Você acertou!"), 300);
+      } else if (guesses.length === 6) {
+        gameOver = true;
+        setTimeout(() => alert(`😢 Fim de jogo! A palavra era: ${solution}`), 300);
+      }
+
+      currentGuess = "";
+      updateGrid();
+    }
+
+    // Teclado do computador
+    document.addEventListener("keydown", e => {
+      if (gameOver) return;
+      if (e.key === "Enter") handleKey("ENTER");
+      else if (e.key === "Backspace") handleKey("⌫");
+      else if (/^[a-zA-Z]$/.test(e.key)) handleKey(e.key.toUpperCase());
+    });
+
+    // Iniciar
+    createGrid();
+    createKeyboard();
+    updateGrid();
+  </script>
 </body>
 </html>

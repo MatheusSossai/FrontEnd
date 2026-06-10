@@ -1,0 +1,123 @@
+qui está o texto completo e contínuo explicando passo a passo como criar um jogo tipo Termo (Wordle) usando React:
+Para criar um jogo do tipo Termo usando React, comece criando o projeto com o comando: npm create vite@latest termo-game -- --template react. Depois entre na pasta com cd termo-game, rode npm install e em seguida npm run dev para iniciar o servidor de desenvolvimento.
+Dentro da pasta src, organize a estrutura de pastas criando as seguintes pastas: components, hooks e utils. Dentro de utils crie o arquivo words.js e coloque nele uma lista de palavras de 5 letras em maiúsculas, por exemplo: export const WORDS = ["ABACO", "ABRIL", "ACIDO", "AMIGO", "BANHO", "BATER", "BOLSA", "BRACO", "CAIXA", "CANTO", "DEDOS", "DENTE", "FESTA", "GATO", "LIMAO"]; export const VALID_GUESSES = [...WORDS];
+Em seguida, crie dentro da pasta hooks o arquivo useTermo.js com o seguinte conteúdo: import { useState, useEffect, useCallback } from 'react'; import { WORDS } from '../utils/words';
+export function useTermo() {
+const [solution, setSolution] = useState('');
+const [guesses, setGuesses] = useState([]);
+const [currentGuess, setCurrentGuess] = useState('');
+const [gameStatus, setGameStatus] = useState('playing');
+useEffect(() => {
+const randomWord = WORDS[Math.floor(Math.random() * WORDS.length)];
+setSolution(randomWord);
+}, []);
+const addLetter = (letter) => {
+if (currentGuess.length < 5 && gameStatus === 'playing') {
+setCurrentGuess(prev => prev + letter);
+}
+};
+const removeLetter = () => {
+setCurrentGuess(prev => prev.slice(0, -1));
+};
+const submitGuess = () => {
+if (currentGuess.length !== 5) return;
+if (!WORDS.includes(currentGuess)) {
+alert("Essa palavra não existe!");
+return;
+}
+const newGuesses = [...guesses, currentGuess];
+setGuesses(newGuesses);
+setCurrentGuess('');
+if (currentGuess === solution) {
+setGameStatus('won');
+} else if (newGuesses.length === 6) {
+setGameStatus('lost');
+}
+};
+return { solution, guesses, currentGuess, gameStatus, addLetter, removeLetter, submitGuess };
+}
+Agora crie os componentes. Primeiro o arquivo Grid.jsx dentro de components: import Row from './Row';
+function Grid({ guesses, currentGuess, solution }) {
+return (
+     
+      {Array.from({ length: 6 }).map((_, rowIndex) => { 
+        const guess = guesses[rowIndex] || (rowIndex === guesses.length ? currentGuess : ''); 
+        const isSubmitted = rowIndex < guesses.length; 
+        return <row guess="{guess}" solution="{solution}" issubmitted="{isSubmitted}">; 
+      })} 
+    </row> 
+  ); 
+} 
+export default Grid;
+Depois crie Row.jsx: function Row({ guess, solution, isSubmitted }) {
+const letters = guess.padEnd(5, ' ').split('');
+const getStatus = (letter, index) => {
+if (!isSubmitted) return '';
+if (solution[index] === letter) return 'correct';
+if (solution.includes(letter)) return 'present';
+return 'absent';
+};
+return (
+     
+      {letters.map((letter, i) => ( 
+         
+          {letter} 
+         
+      ))} 
+     
+  ); 
+} 
+export default Row;
+Crie o Keyboard.jsx: function Keyboard({ onKey }) {
+const row1 = "QWERTYUIOP".split('');
+const row2 = "ASDFGHJKL".split('');
+const row3 = "ENTERZXCVBNM⌫".split('');
+return (
+     
+      {[row1, row2, row3].map((row, i) => ( 
+         
+          {row.map(key => ( 
+            <button class="key" onclick="{()" &#x3D;=""> onKey(key)}> 
+              {key === '⌫' ? '⌫' : key} 
+            </button> 
+          ))} 
+         
+      ))} 
+     
+  ); 
+} 
+export default Keyboard;
+No arquivo App.jsx substitua o conteúdo por: import { useTermo } from './hooks/useTermo';
+import Grid from './components/Grid';
+import Keyboard from './components/Keyboard';
+import './App.css';
+function App() {
+const { guesses, currentGuess, solution, gameStatus, addLetter, removeLetter, submitGuess } = useTermo();
+const handleKey = (key) => {
+if (key === 'ENTER') submitGuess();
+else if (key === '⌫') removeLetter();
+else addLetter(key);
+};
+return (
+     
+      TERMO 
+      <grid guesses="{guesses}" currentguess="{currentGuess}" solution="{solution}"> 
+      <keyboard onkey="{handleKey}"> 
+      {gameStatus === 'won' &#x26;&#x26; <h2>🎉 Parabéns! Você acertou a palavra!</h2>} 
+      {gameStatus === 'lost' &#x26;&#x26; <h2>😢 Fim de jogo! A palavra era: {solution}</h2>} 
+    </keyboard></grid> 
+  ); 
+} 
+export default App;
+Por fim, adicione estilos no App.css: .app { text-align: center; padding: 20px; font-family: Arial, sans-serif; }
+.grid { margin: 30px auto; display: flex; flex-direction: column; gap: 6px; }
+.row { display: flex; gap: 6px; justify-content: center; }
+.tile { width: 62px; height: 62px; border: 2px solid #3a3a3c; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; text-transform: uppercase; }
+.correct { background: #538d4e; color: white; border-color: #538d4e; }
+.present { background: #b59f3b; color: white; border-color: #b59f3b; }
+.absent { background: #3a3a3c; color: white; border-color: #3a3a3c; }
+.keyboard { margin-top: 30px; }
+.keyboard-row { display: flex; justify-content: center; gap: 5px; margin: 5px 0; }
+.key { padding: 12px 10px; min-width: 35px; font-size: 16px; background: #818384; color: white; border: none; border-radius: 4px; cursor: pointer; }
+Com isso o jogo básico estará funcionando. Você pode depois melhorar adicionando suporte ao teclado físico do computador, animações de virada nas letras, modal de estatísticas, salvamento no localStorage e mais palavras na lista. Teste digitando letras, usando o teclado virtual ou apertando Enter para enviar o palpite.
+Esse é o guia completo em um único texto para você seguir.
